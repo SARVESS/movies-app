@@ -37,7 +37,7 @@ export function removeFromFavourites(movie) {
 
 export function setShowFavourites(val) {
   return {
-    type: REMOVE_FROM_FAVOURITES,
+    type: SET_SHOW_FAVOURITES,
     val,
   };
 }
