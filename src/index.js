@@ -24,10 +24,8 @@ import rootReducer from './reducers';
 
 //2nd Way of writing middleware using arrow functions
 const logger = ({ dispatch, getState }) => (next) => (action) => {
-  // logger code
-  if (typeof action !== 'function') {
+  // middleware
     console.log('ACTION_TYPE = ', action.type);
-  }
   next(action);
 };
 
@@ -57,7 +55,41 @@ class Provider extends React.Component {
     );
   }
 }
-// console.log('BEFORE STATE', store.getState());
+
+//const connectedAppComponent = connect(callback)(App);
+export function connect(callback) {
+  return function (Component) {
+    class ConnectedComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.unsubscribe = this.props.store.subscribe(() => this.forceUpdate());
+      }
+
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+      render() {
+        const { store } = this.props;
+        const state = store.getState();
+        const dataToBePAssedAsProps = callback(state);
+        return (
+          <Component {...dataToBePAssedAsProps} dispatch={store.dispatch} />
+        );
+      }
+    }
+
+    class ConnectedComponentWrapper extends React.Component {
+      render() {
+        return (
+          <StoreContext.Consumer>
+            {(store) => <ConnectedComponent store={store} />}
+          </StoreContext.Consumer>
+        );
+      }
+    }
+    return ConnectedComponentWrapper;
+  };
+}
 
 // store.dispatch({
 //   type: 'ADD_MOVIES',
