@@ -26,13 +26,13 @@ class App extends React.Component {
     this.props.dispatch(setShowFavourites(val));
   };
   render() {
-    const { movies, search } = this.props; // {movies: {}, seacrh: {} }
+    const { movies } = this.props; // {movies: {}, search: {} }
     const { list, favourites, showFavourites } = movies;
 
     const displayMovies = showFavourites ? favourites : list;
     return (
       <div className="App">
-        <Navbar search={search} />
+        <Navbar />
         <div className="main">
           <div className="tabs">
             <div
@@ -82,7 +82,7 @@ class App extends React.Component {
 function mapStateToProps(state) {
   return {
     movies: state.movies,
-    search: state.movies,
+    search: state.search,
   };
 }
 
